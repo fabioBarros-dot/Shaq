@@ -2,30 +2,42 @@ using UnityEngine;
 
 public class Movimentation : MonoBehaviour
 {
+    public float velocidade = 4f;
+
+    private Rigidbody2D rb;
+    private Vector2 direcaoInput;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        rb = GetComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetAxis("Horizontal") > 0)
+        LoadInput();
+    }
+
+    void FixedUpdate()
+    {
+        Move();
+    }
+
+    void LoadInput()
+    {
+        float x = Input.GetAxisRaw("Horizontal");
+        float y = Input.GetAxisRaw("Vertical");
+
+        if (x != 0)
         {
-            transform.Translate(Vector3.right * Time.deltaTime);
+            y = 0;
         }
-        else if (Input.GetAxis("Horizontal") < 0)
-        {
-            transform.Translate(Vector3.left * Time.deltaTime);
-        }
-        if (Input.GetAxis("Vertical") > 0)
-        {
-            transform.Translate(Vector3.up * Time.deltaTime);
-        }
-        else if (Input.GetAxis("Vertical") < 0)
-        {
-            transform.Translate(Vector3.down * Time.deltaTime);
-        }
+
+        direcaoInput = new Vector2(x, y).normalized;
+    }
+
+    void Move()
+    {
+        rb.linearVelocity = direcaoInput * velocidade;
     }
 }
